@@ -1,0 +1,47 @@
+session_id: 354e08b4
+model: gpt-4-turbo
+codebase_hash: none
+initial_context: Building a calculator app
+created_at: '2026-01-20T02:52:30.545874'
+events:
+- type: llm_call
+  timestamp: '2026-01-20T02:52:30.546716'
+  input: Write a Python function to add two numbers
+  output: "def add(a: int, b: int) -> int:\n    \"\"\"Add two numbers.\"\"\"\n   \
+    \ return a + b"
+  metadata:
+    temperature: 0.2
+    response_hash: sha256:e5b5eba9feab3300
+- type: edit
+  timestamp: '2026-01-20T02:52:30.547632'
+  input: calc.py
+  output: '+def add(a: int, b: int) -> int:
+
+    +    """Add two numbers."""
+
+    +    return a + b'
+  metadata: {}
+- type: tool_call
+  timestamp: '2026-01-20T02:52:30.548795'
+  input:
+    tool: pytest
+    args: -v calc.py
+  output: 'PASSED: test_add'
+  metadata: {}
+- type: llm_call
+  timestamp: '2026-01-20T02:52:30.550020'
+  input: Add a subtract function
+  output: "def subtract(a: int, b: int) -> int:\n    \"\"\"Subtract b from a.\"\"\"\
+    \n    return a - b"
+  metadata:
+    temperature: 0.2
+    response_hash: sha256:12dd625753db8635
+- type: edit
+  timestamp: '2026-01-20T02:52:30.551501'
+  input: calc.py
+  output: '+def subtract(a: int, b: int) -> int:
+
+    +    """Subtract b from a."""
+
+    +    return a - b'
+  metadata: {}

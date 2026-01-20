@@ -1,0 +1,111 @@
+session_id: demo-refactor
+model: gpt-4
+codebase_hash: git:a1b2c3d4e5f6
+initial_prompt: Refactor the authentication module to use JWT
+created_at: '2024-01-15T10:30:00'
+events:
+  - type: llm_call
+    input: |
+      I have this auth function that uses session cookies. 
+      Can you refactor it to use JWT tokens instead?
+      
+      ```python
+      def authenticate(username, password):
+          if verify_credentials(username, password):
+              session['user'] = username
+              return True
+          return False
+      ```
+    output: |
+      Here's the refactored version using JWT:
+      
+      ```python
+      import jwt
+      from datetime import datetime, timedelta
+      
+      SECRET_KEY = "your-secret-key"
+      
+      def authenticate(username, password):
+          if verify_credentials(username, password):
+              token = jwt.encode({
+                  'user': username,
+                  'exp': datetime.utcnow() + timedelta(hours=24)
+              }, SECRET_KEY, algorithm='HS256')
+              return token
+          return None
+      ```
+    timestamp: '2024-01-15T10:30:01'
+    metadata:
+      model: gpt-4
+      temperature: 0.2
+
+  - type: edit
+    input: auth.py
+    output: |
+      - from flask import session
+      + import jwt
+      + from datetime import datetime, timedelta
+      + 
+      + SECRET_KEY = "your-secret-key"
+      
+      - def authenticate(username, password):
+      -     if verify_credentials(username, password):
+      -         session['user'] = username
+      -         return True
+      -     return False
+      + def authenticate(username, password):
+      +     if verify_credentials(username, password):
+      +         token = jwt.encode({
+      +             'user': username,
+      +             'exp': datetime.utcnow() + timedelta(hours=24)
+      +         }, SECRET_KEY, algorithm='HS256')
+      +         return token
+      +     return None
+    timestamp: '2024-01-15T10:30:45'
+    metadata: {}
+
+  - type: tool_call
+    input: 'pytest: -v test_auth.py'
+    output: |
+      test_auth.py::test_valid_login PASSED
+      test_auth.py::test_invalid_login PASSED
+      test_auth.py::test_token_expiry PASSED
+      
+      3 passed in 0.42s
+    timestamp: '2024-01-15T10:31:02'
+    metadata:
+      tool_name: pytest
+
+  - type: llm_call
+    input: The tests pass. Should I also add a token verification function?
+    output: |
+      Yes, you'll need a verification function. Here it is:
+      
+      ```python
+      def verify_token(token):
+          try:
+              payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+              return payload['user']
+          except jwt.ExpiredSignatureError:
+              return None
+          except jwt.InvalidTokenError:
+              return None
+      ```
+    timestamp: '2024-01-15T10:31:30'
+    metadata:
+      model: gpt-4
+      temperature: 0.2
+
+  - type: edit
+    input: auth.py
+    output: |
+      + def verify_token(token):
+      +     try:
+      +         payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+      +         return payload['user']
+      +     except jwt.ExpiredSignatureError:
+      +         return None
+      +     except jwt.InvalidTokenError:
+      +         return None
+    timestamp: '2024-01-15T10:32:00'
+    metadata: {}
