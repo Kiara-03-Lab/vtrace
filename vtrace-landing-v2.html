@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vtrace — Never Lose Your AI Coding Work Again</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&family=Source+Serif+4:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Neutral, accessible color palette */
+            --bg-white: #ffffff;
+            --bg-light: #f8f9fa;
+            --bg-subtle: #f1f3f4;
+            --text-primary: #1a1a1a;
+            --text-secondary: #5f6368;
+            --text-muted: #80868b;
+            --accent: #1a73e8;
+            --accent-hover: #1557b0;
+            --accent-light: #e8f0fe;
+            --success: #188038;
+            --success-light: #e6f4ea;
+            --error: #c5221f;
+            --error-light: #fce8e6;
+            --border: #dadce0;
+            --border-dark: #c4c7c9;
+            
+            /* Typography */
+            --font-sans: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-serif: 'Source Serif 4', Georgia, serif;
+            
+            /* Spacing */
+            --section-padding: 5rem 1.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-white);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Accessibility: Focus styles */
+        a:focus, button:focus {
+            outline: 3px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* Skip link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            z-index: 1000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Navigation */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 1.5rem;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--accent);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            border: 1px solid var(--border-dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-light);
+            border-color: var(--text-secondary);
+        }
+
+        /* Hero Section - Clear Value Prop */
+        .hero {
+            padding: 4rem 1.5rem 5rem;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        @media (max-width: 900px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 2.75rem);
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 520px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-sub {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 900px) {
+            .hero-ctas {
+                justify-content: center;
+            }
+        }
+
+        .hero-note {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Scenario Box - The "Aha" moment */
+        .scenario-box {
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+
+        .scenario-header {
+            padding: 0.875rem 1.25rem;
+            background: var(--bg-subtle);
+            border-bottom: 1px solid var(--border);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scenario-content {
+            padding: 1.5rem;
+        }
+
+        .scenario-step {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .scenario-step:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .scenario-step:first-child {
+            padding-top: 0;
+        }
+
+        .step-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .step-icon.problem {
+            background: var(--error-light);
+        }
+
+        .step-icon.solution {
+            background: var(--success-light);
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        .step-text strong {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .step-text span {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Section Styles */
+        .section {
+            padding: var(--section-padding);
+        }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+
+        .section-label {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-desc {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Who Is This For */
+        .persona-section {
+            background: var(--bg-white);
+        }
+
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .persona-card {
+            padding: 1.75rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .persona-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .persona-emoji {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .persona-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .persona-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .persona-check {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .persona-check::before {
+            content: "✓ ";
+        }
+
+        /* How It Works - Simple 3 Steps */
+        .how-section {
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .steps-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0 auto 1.25rem;
+        }
+
+        .step-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .step-card p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Before/After Visual */
+        .compare-section {
+            background: var(--bg-white);
+        }
+
+        .compare-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .compare-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .compare-box {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .compare-box.before {
+            border-color: var(--error);
+        }
+
+        .compare-box.after {
+            border-color: var(--success);
+        }
+
+        .compare-header {
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .compare-box.before .compare-header {
+            background: var(--error-light);
+            color: var(--error);
+        }
+
+        .compare-box.after .compare-header {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .compare-content {
+            padding: 1.5rem;
+            background: var(--bg-white);
+        }
+
+        .compare-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .compare-item:first-child {
+            padding-top: 0;
+        }
+
+        .compare-icon {
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+
+        /* Features - Outcome Focused */
+        .features-section {
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .testimonial-card {
+            padding: 1.75rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .testimonial-quote {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .author-info strong {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        .author-info span {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Pricing - Simpler */
+        .pricing-section {
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 600px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .pricing-card {
+            padding: 2rem;
+            background: var(--bg-white);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+        }
+
+        .pricing-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .pricing-price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+
+        .pricing-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .pricing-features li::before {
+            content: "✓";
+            color: var(--success);
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+        }
+
+        /* FAQ */
+        .faq-section {
+            background: var(--bg-white);
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-list {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 0;
+        }
+
+        .faq-item:first-child {
+            padding-top: 0;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .faq-answer {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--accent);
+            color: white;
+            text-align: center;
+            padding: 5rem 1.5rem;
+        }
+
+        .cta-section h2 {
+            font-family: var(--font-serif);
+            font-size: clamp(1.75rem, 3vw, 2.25rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-section .btn-primary {
+            background: white;
+            color: var(--accent);
+        }
+
+        .cta-section .btn-primary:hover {
+            background: var(--bg-light);
+        }
+
+        .cta-section .btn-secondary {
+            background: transparent;
+            color: white;
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        .cta-section .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-light);
+            border-top: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-copy {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Mobile nav */
+        @media (max-width: 768px) {
+            .nav-links a:not(.btn) {
+                display: none;
+            }
+        }
+
+        /* Animations - Reduced motion support */
+        @media (prefers-reduced-motion: no-preference) {
+            .fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+
+            .fade-in.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in {
+                opacity: 1;
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip link for accessibility -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+
+    <!-- Navigation -->
+    <nav role="navigation" aria-label="Main navigation">
+        <div class="nav-inner">
+            <a href="#" class="logo" aria-label="vtrace home">
+                <span class="logo-icon" aria-hidden="true">v</span>
+                vtrace
+            </a>
+            <div class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#" class="btn btn-primary">Try Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <main id="main">
+        <!-- Hero Section -->
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-inner">
+                <div class="hero-content">
+                    <span class="hero-badge">Free &amp; Open Source</span>
+                    <h1 id="hero-title">Never lose your AI coding work again.</h1>
+                    <p class="hero-sub">
+                        Using ChatGPT, Copilot, or Cursor to write code? 
+                        vtrace saves everything — so you can go back, find what worked, and fix what didn't.
+                    </p>
+                    <div class="hero-ctas">
+                        <a href="#" class="btn btn-primary">Try Free — No Signup</a>
+                        <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+                    </div>
+                    <p class="hero-note">Works with any AI coding tool. Takes 2 minutes to set up.</p>
+                </div>
+
+                <!-- Scenario Box - The "Aha" moment -->
+                <div class="scenario-box" role="region" aria-label="Example scenario">
+                    <div class="scenario-header">Sound familiar?</div>
+                    <div class="scenario-content">
+                        <div class="scenario-step">
+                            <div class="step-icon problem" aria-hidden="true">😫</div>
+                            <div class="step-text">
+                                <strong>Monday</strong>
+                                <span>You ask AI to refactor your login code. It works perfectly.</span>
+                            </div>
+                        </div>
+                        <div class="scenario-step">
+                            <div class="step-icon problem" aria-hidden="true">😰</div>
+                            <div class="step-text">
+                                <strong>Thursday</strong>
+                                <span>Something's broken. You try the same prompt. AI gives you completely different code.</span>
+                            </div>
+                        </div>
+                        <div class="scenario-step">
+                            <div class="step-icon problem" aria-hidden="true">😤</div>
+                            <div class="step-text">
+                                <strong>Now you're stuck</strong>
+                                <span>You can't remember what worked. Can't find the old version. Have to start over.</span>
+                            </div>
+                        </div>
+                        <div class="scenario-step">
+                            <div class="step-icon solution" aria-hidden="true">✨</div>
+                            <div class="step-text">
+                                <strong>With vtrace</strong>
+                                <span>Every AI conversation is saved. Find Monday's code in seconds. See exactly what changed.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Who Is This For -->
+        <section class="section persona-section" aria-labelledby="persona-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">Who it's for</span>
+                    <h2 class="section-title" id="persona-title">vtrace is for you if...</h2>
+                </div>
+                <div class="persona-grid">
+                    <article class="persona-card fade-in">
+                        <div class="persona-emoji" aria-hidden="true">🎓</div>
+                        <h3>You're learning to code with AI</h3>
+                        <p>You use ChatGPT or Copilot to help write code, but sometimes you lose track of what the AI suggested and what actually worked.</p>
+                        <div class="persona-check">Keep every AI suggestion organized</div>
+                    </article>
+                    <article class="persona-card fade-in">
+                        <div class="persona-emoji" aria-hidden="true">💻</div>
+                        <h3>You code with Cursor or Copilot daily</h3>
+                        <p>AI writes a lot of your code now. But when something breaks, you can't tell which AI change caused it.</p>
+                        <div class="persona-check">Find the exact change that broke things</div>
+                    </article>
+                    <article class="persona-card fade-in">
+                        <div class="persona-emoji" aria-hidden="true">👥</div>
+                        <h3>You work on a team using AI</h3>
+                        <p>Your teammate used AI to build a feature. Now you need to understand or modify it, but there's no record of how it was made.</p>
+                        <div class="persona-check">Share AI workflows with your team</div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="section how-section" aria-labelledby="how-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">How it works</span>
+                    <h2 class="section-title" id="how-title">Three steps. Two minutes to set up.</h2>
+                    <p class="section-desc">No complicated configuration. Just install and start coding.</p>
+                </div>
+                <div class="steps-container">
+                    <article class="step-card fade-in">
+                        <div class="step-number" aria-hidden="true">1</div>
+                        <h3>Install vtrace</h3>
+                        <p>One command to install. Works alongside your existing tools — Cursor, Copilot, ChatGPT, Claude, any AI.</p>
+                    </article>
+                    <article class="step-card fade-in">
+                        <div class="step-number" aria-hidden="true">2</div>
+                        <h3>Code normally</h3>
+                        <p>vtrace quietly saves every AI conversation and code change in the background. You don't change how you work.</p>
+                    </article>
+                    <article class="step-card fade-in">
+                        <div class="step-number" aria-hidden="true">3</div>
+                        <h3>Go back anytime</h3>
+                        <p>Need to find what worked last week? See what changed? Compare two versions? It's all there, searchable and organized.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Before/After -->
+        <section class="section compare-section" aria-labelledby="compare-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">The difference</span>
+                    <h2 class="section-title" id="compare-title">Before and after vtrace</h2>
+                </div>
+                <div class="compare-container">
+                    <div class="compare-box before" role="region" aria-label="Without vtrace">
+                        <div class="compare-header">❌ Without vtrace</div>
+                        <div class="compare-content">
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">😕</span>
+                                <span>"What prompt did I use last week?"</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">😕</span>
+                                <span>"Which AI change broke this?"</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">😕</span>
+                                <span>"I can't recreate what worked before"</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">😕</span>
+                                <span>"How did my teammate build this?"</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">😕</span>
+                                <span>"AI gave me different code this time"</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="compare-box after" role="region" aria-label="With vtrace">
+                        <div class="compare-header">✓ With vtrace</div>
+                        <div class="compare-content">
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">✓</span>
+                                <span>Search all your past AI conversations</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">✓</span>
+                                <span>Step through changes to find the bug</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">✓</span>
+                                <span>Replay any session exactly as it happened</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">✓</span>
+                                <span>See the full history of AI-assisted code</span>
+                            </div>
+                            <div class="compare-item">
+                                <span class="compare-icon" aria-hidden="true">✓</span>
+                                <span>Get the exact same result every time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section id="features" class="section features-section" aria-labelledby="features-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">Features</span>
+                    <h2 class="section-title" id="features-title">Everything you need. Nothing you don't.</h2>
+                </div>
+                <div class="features-grid">
+                    <article class="feature-card fade-in">
+                        <h3>🔍 Search past sessions</h3>
+                        <p>Find any AI conversation by keyword, date, or file. No more scrolling through chat history.</p>
+                    </article>
+                    <article class="feature-card fade-in">
+                        <h3>⏪ Replay any session</h3>
+                        <p>Go back to any point in time. See exactly what the AI suggested and what code was written.</p>
+                    </article>
+                    <article class="feature-card fade-in">
+                        <h3>🔄 Compare versions</h3>
+                        <p>See what changed between two sessions. Find when and why something broke.</p>
+                    </article>
+                    <article class="feature-card fade-in">
+                        <h3>📁 Works with any AI tool</h3>
+                        <p>Cursor, Copilot, ChatGPT, Claude, local models — vtrace works with all of them.</p>
+                    </article>
+                    <article class="feature-card fade-in">
+                        <h3>👥 Share with your team</h3>
+                        <p>Export sessions to share workflows. Review AI-assisted code like you review pull requests.</p>
+                    </article>
+                    <article class="feature-card fade-in">
+                        <h3>🔒 Private by default</h3>
+                        <p>All data stays on your machine. Nothing sent to external servers unless you choose to sync.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="section testimonials-section" aria-labelledby="testimonials-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">What people say</span>
+                    <h2 class="section-title" id="testimonials-title">Developers like you use vtrace</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card fade-in">
+                        <blockquote class="testimonial-quote">
+                            "I used to lose track of what ChatGPT told me constantly. Now I just search 'login auth' and find exactly what worked two weeks ago."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">JM</div>
+                            <div class="author-info">
+                                <strong>Jamie M.</strong>
+                                <span>Learning web development</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="testimonial-card fade-in">
+                        <blockquote class="testimonial-quote">
+                            "When my Cursor-generated code breaks, I can step through the changes and find the exact line that caused it. Saves me hours."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">SK</div>
+                            <div class="author-info">
+                                <strong>Sam K.</strong>
+                                <span>Full-stack developer</span>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="testimonial-card fade-in">
+                        <blockquote class="testimonial-quote">
+                            "Our team reviews vtrace logs in PRs now. It's way easier to understand AI-generated code when you can see the conversation that created it."
+                        </blockquote>
+                        <div class="testimonial-author">
+                            <div class="author-avatar" aria-hidden="true">AR</div>
+                            <div class="author-info">
+                                <strong>Alex R.</strong>
+                                <span>Tech lead, 8-person team</span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing -->
+        <section id="pricing" class="section pricing-section" aria-labelledby="pricing-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">Pricing</span>
+                    <h2 class="section-title" id="pricing-title">Free to start. Upgrade when you need to.</h2>
+                </div>
+                <div class="pricing-grid">
+                    <article class="pricing-card">
+                        <h3>Free</h3>
+                        <div class="pricing-price">$0</div>
+                        <p class="pricing-desc">For individual developers</p>
+                        <ul class="pricing-features">
+                            <li>Unlimited local sessions</li>
+                            <li>Search &amp; replay</li>
+                            <li>Works with all AI tools</li>
+                            <li>Compare versions</li>
+                            <li>Export to share</li>
+                        </ul>
+                        <a href="#" class="btn btn-secondary">Download Free</a>
+                    </article>
+                    <article class="pricing-card featured">
+                        <h3>Team</h3>
+                        <div class="pricing-price">$12<span>/month</span></div>
+                        <p class="pricing-desc">For teams who share workflows</p>
+                        <ul class="pricing-features">
+                            <li>Everything in Free</li>
+                            <li>Cloud sync across devices</li>
+                            <li>Shared team sessions</li>
+                            <li>GitHub PR integration</li>
+                            <li>Priority support</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">Start Free Trial</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section faq-section" aria-labelledby="faq-title">
+            <div class="section-inner">
+                <div class="section-header">
+                    <span class="section-label">FAQ</span>
+                    <h2 class="section-title" id="faq-title">Common questions</h2>
+                </div>
+                <div class="faq-list">
+                    <article class="faq-item">
+                        <h3 class="faq-question">Does vtrace work with [my AI tool]?</h3>
+                        <p class="faq-answer">Yes. vtrace works with ChatGPT, GitHub Copilot, Cursor, Claude, Gemini, and any other AI coding assistant. It captures the conversation and code changes regardless of which tool you use.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3 class="faq-question">Is my code sent to your servers?</h3>
+                        <p class="faq-answer">No. By default, everything stays on your computer. The Team plan offers optional cloud sync, but you control what gets synced.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3 class="faq-question">How is this different from Git?</h3>
+                        <p class="faq-answer">Git tracks code changes. vtrace tracks AI conversations AND code changes together — so you can see which prompt led to which code. They work great together.</p>
+                    </article>
+                    <article class="faq-item">
+                        <h3 class="faq-question">How long does setup take?</h3>
+                        <p class="faq-answer">About 2 minutes. One install command, and you're ready to go. No configuration needed.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="cta-section" aria-labelledby="cta-title">
+            <h2 id="cta-title">Stop losing your AI coding work.</h2>
+            <p>Join thousands of developers who never lose track of what their AI did.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary">Try Free — No Signup</a>
+                <a href="#" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="footer-inner">
+            <a href="#" class="logo" aria-label="vtrace home">
+                <span class="logo-icon" aria-hidden="true">v</span>
+                vtrace
+            </a>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">GitHub</a>
+                <a href="#">Twitter</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copy">© 2025 vtrace. Open source under MIT license.</div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animations with reduced motion support
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
+    </script>
+</body>
+</html>
